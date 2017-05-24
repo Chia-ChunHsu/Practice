@@ -16,6 +16,7 @@
 #include <opencv2/opencv.hpp>
 #include <QDebug>
 #include <similarpca.h>
+#include <limitpoint.h>
 
 namespace Ui {
 class MainWindow;

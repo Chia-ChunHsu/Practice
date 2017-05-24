@@ -27,12 +27,14 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     mypca.cpp \
     similarpca.cpp \
-    pcaaxis.cpp
+    pcaaxis.cpp \
+    limitpoint.cpp
 
 HEADERS  += mainwindow.h \
     mypca.h \
     similarpca.h \
-    pcaaxis.h
+    pcaaxis.h \
+    limitpoint.h
 
 FORMS    += mainwindow.ui
 #INCLUDEPATH += $$quote(D:\Lib\OpenCVBinaries-master\opencv\include)\

@@ -14,7 +14,9 @@
 #include <mypca.h>
 #include <pcaaxis.h>
 
-//#include <QDebug>
+///
+/// \brief The SimilarPCA class
+///
 
 class SimilarPCA: public myPCA
 {
@@ -24,9 +26,16 @@ public:
     void getInterestPoint(std::vector<cv::Point> &interestP);
 private:
     void Initial();
+    ///
+    /// \brief DeleteOutLier: Delete those are too unsimilar.
+    ///
     void DeleteOutLier();
-//    void CombinationNearby();
-//    void findGroupP();
+    ///
+    /// \brief calDotProduct
+    /// \param ax1 PCA component 1
+    /// \param ax2 PCA component 2
+    /// \return dot product
+    ///
     double calDotProduct(PCAAxis ax1,PCAAxis ax2);
     std::vector<cv::Point> CntP;
     std::vector<cv::Point> P1;

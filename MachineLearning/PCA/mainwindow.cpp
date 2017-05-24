@@ -32,9 +32,17 @@ void MainWindow::on_loadImgButton_clicked()
     cv::Mat result = SPCA.getResult();
     cv::imshow("output", result);
 
+    cv::Mat point = src.clone();
     std::vector<cv::Point> interestPoint;
     SPCA.getInterestPoint(interestPoint);
     for(int i=0;i<interestPoint.size();i++)
-        cv::circle(src,interestPoint[i],3,cv::Scalar(0,0,255),-1,8,0);
-    cv::imshow("Interest Point",src);
+        cv::circle(point,interestPoint[i],3,cv::Scalar(0,0,255),-1,8,0);
+    cv::imshow("Interest Point",point);
+//    cv::Mat lineMat = src.clone();
+//    for(int i=0;i<interestPoint.size();i++)
+//        cv::line(lineMat,cv::Point(interestPoint[i].x,0),cv::Point(interestPoint[i].x,lineMat.rows-1),cv::Scalar(0,0,255),1,8,0);
+//    cv::imshow("lineMat",lineMat);
+
+    LimitPoint Lmp(src,interestPoint);
+
 }
