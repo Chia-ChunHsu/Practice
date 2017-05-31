@@ -23,7 +23,9 @@ LimitPoint::LimitPoint(cv::Mat srcMat, std::vector<cv::Point> interestPoint)
     cv::Mat pointdy = srcMat.clone();
     for(int i=0;i<interestPoint.size();i++)
     {
-        if(abs(interestPoint[i].y-average_y)<sigma_y*2)
+        if(interestPoint[i].y> average_y && interestPoint[i].y-average_y<sigma_y)
+            interestPy.push_back(interestPoint[i]);
+        else if(interestPoint[i].y < average_y && average_y - interestPoint[i].y<sigma_y)
             interestPy.push_back(interestPoint[i]);
     }
     for(int i=0;i<interestPy.size();i++)
@@ -51,8 +53,6 @@ LimitPoint::LimitPoint(cv::Mat srcMat, std::vector<cv::Point> interestPoint)
     }
     b = b/b_deno;
     double a = average_ny-b*average_nx;
-
-
 
     std::vector<cv::Point> Py;
     //Delete y
@@ -82,7 +82,7 @@ LimitPoint::LimitPoint(cv::Mat srcMat, std::vector<cv::Point> interestPoint)
 
     //LineScan
     cv::Mat lineMat = srcMat.clone();
-    cv::line(lineMat,cv::Point(Py[0].x,b*Py[0].x+a),cv::Point(Py[Py.size()-1].x,Py[Py.size()-1].x*b+a),cv::Scalar(0,0,255),1,8,0);
+    cv::line(lineMat,cv::Point(lineMat.cols,b*lineMat.cols+a),cv::Point(0,0*b+a),cv::Scalar(0,0,255),1,8,0);
     cv::imshow("lineMat",lineMat);
 
     int initialVal = changeValue(srcMat,a,b,Py[0].x,Py[Py.size()-1].x,0);
