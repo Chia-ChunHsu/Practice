@@ -12,12 +12,29 @@ Vector2D::Vector2D(int x, int y)
     _y = y;
 }
 
-double Vector2D::operator*(Vector2D &vector2)
+double Vector2D::operator*(Vector2D &Vector2)
 {
-    return _x*vector2._x+_y*vector2._y;
+    return _x*Vector2._x+_y*Vector2._y;
 }
 
-Vector2D Vector2D::operator+(Vector2D &vector2)
+Vector2D Vector2D::operator+(Vector2D &Vector2)
 {
-    return vector2;
+    Vector2D result(_x+Vector2._x,_y+Vector2._y);
+    return result;
+}
+
+Vector2D Vector2D::operator-(Vector2D &Vector2)
+{
+    Vector2D result(_x-Vector2._x,_y-Vector2._y);
+    return result;
+}
+
+int Vector2D::GetPointX()
+{
+    return _x;
+}
+
+int Vector2D::GetPointY()
+{
+    return _y;
 }

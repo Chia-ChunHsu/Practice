@@ -7,8 +7,14 @@ class Vector2D
 public:
     Vector2D();
     Vector2D(int x,int y);
-    double operator*(Vector2D &vector2);
+    //dot product
+    double operator*(Vector2D &Vector2);
+    //vector addition
     Vector2D operator+(Vector2D &Vector2);
+    //vector minus
+    Vector2D operator-(Vector2D &Vector2);
+    int GetPointX();
+    int GetPointY();
 private:
     int _x;
     int _y;

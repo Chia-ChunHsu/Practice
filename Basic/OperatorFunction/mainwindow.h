@@ -3,8 +3,8 @@
 
 #include <QMainWindow>
 #include <QDebug>
-
 #include <vector2d.h>
+
 namespace Ui {
 class MainWindow;
 }
