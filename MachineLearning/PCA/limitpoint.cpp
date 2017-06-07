@@ -43,6 +43,7 @@ LimitPoint::LimitPoint(cv::Mat srcMat, std::vector<cv::Point> interestPoint)
     }
     average_nx = average_nx/interestPy.size();
     average_ny = average_ny/interestPy.size();
+
     //L: y = a + bx
     double b = 0;
     double b_deno = 0;
@@ -75,10 +76,6 @@ LimitPoint::LimitPoint(cv::Mat srcMat, std::vector<cv::Point> interestPoint)
             }
         }
     }
-//    cv::Mat OPMat = srcMat.clone();
-//    for(int i=0;i<Py.size();i++)
-//        cv::circle(OPMat,Py[i],3,cv::Scalar(0,0,255),-1,8,0);
-//    cv::imshow("OPMat",OPMat);
 
     //LineScan
     cv::Mat lineMat = srcMat.clone();
@@ -87,6 +84,7 @@ LimitPoint::LimitPoint(cv::Mat srcMat, std::vector<cv::Point> interestPoint)
 
     int initialVal = changeValue(srcMat,a,b,Py[0].x,Py[Py.size()-1].x,0);
     qDebug()<<"initialVal = "<<initialVal;
+
     //find upper
     //qDebug()<<"006";
     int upper =0;
@@ -101,6 +99,7 @@ LimitPoint::LimitPoint(cv::Mat srcMat, std::vector<cv::Point> interestPoint)
             //break;
         }
     }
+
     //find lower
     //qDebug()<<"007";
     int lower =0;
@@ -116,27 +115,53 @@ LimitPoint::LimitPoint(cv::Mat srcMat, std::vector<cv::Point> interestPoint)
         }
     }
     //qDebug()<<"008";
-    cv::line(lineMat,cv::Point(Py[0].x,upper),cv::Point(Py[Py.size()-1].x,upper),cv::Scalar(0,0,255),1,8,0);
-    cv::line(lineMat,cv::Point(Py[0].x,lower),cv::Point(Py[Py.size()-1].x,lower),cv::Scalar(0,0,255),1,8,0);
+    cv::Mat lineStorMat;// = srcMat.clone();
+    cv::Mat rotateMat( 2, 3, CV_32FC1 );
+    rotateMat = cv::getRotationMatrix2D(cv::Point(average_nx,average_ny),atan(b)/3.1415*180,1.0);
+    cv::warpAffine(srcMat,lineStorMat,rotateMat,srcMat.size());
+    cv::imshow("lineStorMat",lineStorMat);
+    int x00 = sqrt(pow(Py[0].x-average_nx,2)+pow(Py[0].x*b+a-(average_ny-upper)-average_ny,2))*cos(atan(b));
+    int y00 = sqrt(pow(Py[0].x-average_nx,2)+pow(Py[0].x*b+a-(average_ny-upper-average_ny),2))*sin(atan(b));
+    int x01 = sqrt(pow(Py[Py.size()-1].x-average_nx,2)+pow(Py[Py.size()-1].x*b+a-(average_ny-upper)-average_ny,2))*cos(atan(b));
+    int y01 = sqrt(pow(Py[Py.size()-1].x-average_nx,2)+pow(Py[Py.size()-1].x*b+a-(average_ny-upper)-average_ny,2))*sin(atan(b));
+    int x10 = sqrt(pow(Py[0].x-average_nx,2)+pow(Py[0].x*b+a+(lower-average_ny)-average_ny,2))*cos(atan(b));
+    int y10 = sqrt(pow(Py[0].x-average_nx,2)+pow(Py[0].x*b+a-(average_ny-upper-average_ny),2))*sin(atan(b));
+    int x11 = sqrt(pow(Py[Py.size()-1].x-average_nx,2)+pow(Py[Py.size()-1].x*b+a-(average_ny-upper)-average_ny,2))*cos(atan(b));
+    int y11 = sqrt(pow(Py[Py.size()-1].x-average_nx,2)+pow(Py[Py.size()-1].x*b+a-(average_ny-upper)-average_ny,2))*sin(atan(b));
+    //qDebug()<<"("<<x00<<","<<y00<<")"<<" ("<<x01<<","<<y01<<")"<<" ("<<x10<<","<<y10<<") ("<<x11<<","<<y11<<")";
+    //qDebug()<<"("<<0<<","<<lower<<")"<<" ("<<x01<<","<<y01<<")"<<" ("<<x10<<","<<y10<<") ("<<x11<<","<<y11<<")";
+    cv::Rect ROI(0,upper*0.9,lineStorMat.cols,lower*1.1-upper*0.9);
+    cv::Mat IMat = lineStorMat(ROI).clone();
+    cv::imwrite("ROI.jpg",IMat);
+    cv::line(lineStorMat,cv::Point(0,lower),cv::Point(lineStorMat.cols-1,lower),cv::Scalar(0,0,255),1,8,0);
+    cv::line(lineStorMat,cv::Point(0,upper),cv::Point(lineStorMat.cols-1,upper),cv::Scalar(0,0,255),1,8,0);
+    cv::imshow("lineStorMat2",lineStorMat);
+    //cv::line(lineStorMat,cv::Point(Py[0].x,Py[0].x*b+a+(lower-average_ny)),cv::Point(Py[Py.size()-1].x,Py[Py.size()-1].x*b+a+(lower-average_ny)),cv::Scalar(0,0,255),1,8,0);
+
+    cv::line(lineStorMat,cv::Point(Py[0].x,Py[0].x*b+a-(average_ny-upper)),cv::Point(Py[Py.size()-1].x,Py[Py.size()-1].x*b+a-(average_ny-upper)),cv::Scalar(0,0,255),1,8,0);
+    cv::line(lineStorMat,cv::Point(Py[0].x,Py[0].x*b+a+(lower-average_ny)),cv::Point(Py[Py.size()-1].x,Py[Py.size()-1].x*b+a+(lower-average_ny)),cv::Scalar(0,0,255),1,8,0);
+
+
+    //    cv::line(lineMat,cv::Point(Py[0].x,upper),cv::Point(Py[Py.size()-1].x,upper),cv::Scalar(0,0,255),1,8,0);
+//    cv::line(lineMat,cv::Point(Py[0].x,lower),cv::Point(Py[Py.size()-1].x,lower),cv::Scalar(0,0,255),1,8,0);
+    cv::line(lineMat,cv::Point(Py[0].x,Py[0].x*b+a-(average_ny-upper)),cv::Point(Py[Py.size()-1].x,Py[Py.size()-1].x*b+a-(average_ny-upper)),cv::Scalar(0,0,255),1,8,0);
+    cv::line(lineMat,cv::Point(Py[0].x,Py[0].x*b+a+(lower-average_ny)),cv::Point(Py[Py.size()-1].x,Py[Py.size()-1].x*b+a+(lower-average_ny)),cv::Scalar(0,0,255),1,8,0);
+
     cv::imshow("upperLowerLineMat",lineMat);
 }
 
 int LimitPoint::changeValue(cv::Mat src, double a, double b, int initialX, int endX,int offset)
 {
-    //qDebug()<<"005";
     int Val = 0;
     cv::Mat grayMat;
-    //qDebug()<<"0051";
     cv::cvtColor(src,grayMat,CV_BGR2GRAY);
     cv::threshold(grayMat,grayMat,100,255,CV_THRESH_BINARY);
-    //qDebug()<<"0052";
     for(int i=initialX;i<endX-1;i++)
     {
         if(i*b+a+offset < src.rows)
             if(abs(grayMat.at<uchar>(int(i*b+a+offset),i)-grayMat.at<uchar>(int((i+1)*b+a+offset),(i+1)))>100)
                 Val++;
     }
-    //qDebug()<<"006";
     return Val;
 }
 

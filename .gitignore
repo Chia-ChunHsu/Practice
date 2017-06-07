@@ -4,3 +4,6 @@ OperatorFunction/debug/
 MathBrain/Q1_Palindromic_Number/Makefile
 Basic/OperatorFunction/Makefile
 MachineLearning/EigenDecomposition/Makefile
+MachineLearning/EigenDecomposition/release/
+MachineLearning/PCA/PCA.pro.user.e656572
+*.jpg

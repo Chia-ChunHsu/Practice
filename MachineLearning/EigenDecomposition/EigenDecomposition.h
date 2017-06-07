@@ -7,7 +7,10 @@
 /// Date: 2017-06-05
 ///
 #include <algorithm>
+//#include <cassert>
+#include <assert.h>
 #include <QDebug>
+
 
 #define DECOMPOSITION_ARRAY 0
 

@@ -7,14 +7,15 @@ EigenDecomposition::EigenDecomposition()
 
 EigenDecomposition::EigenDecomposition(double **matrix,int matrixCol,int matrixRow)
 {
+    throw"jjhj";
     // Avoid User input non-square matrix
-    assert(matrixCol!=matrixRow);
+    assert((matrixCol==matrixRow));
     _matrix = matrix;
     _col = matrixCol;
     _row = matrixRow;
     decomposition(DECOMPOSITION_ARRAY);
 }
-
+#ifdef HAVE_OPENCV
 EigenDecomposition::EigenDecomposition(cv::Mat matrix)
 {
     // Avoid User input an error cv::Mat Type
@@ -25,7 +26,7 @@ EigenDecomposition::EigenDecomposition(cv::Mat matrix)
     _col = matrix.cols;
     _row = matrix.rows;
 }
-
+#endif
 //void EigenDecomposition::SetDecompositionMatrix()
 //{
 
@@ -50,8 +51,11 @@ void EigenDecomposition::decomposition(int type)
         //Determinant Function, Call Determinant Class
         break;
     }
+#ifdef HAVE_OPENCV
     case DECOMPOSITION_CVMAT:
 
         break;
+#endif
     }
+
 }
