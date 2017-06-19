@@ -7,3 +7,4 @@ MachineLearning/EigenDecomposition/Makefile
 MachineLearning/EigenDecomposition/release/
 MachineLearning/PCA/PCA.pro.user.e656572
 *.jpg
+MachineLearning/GradientDescent/Makefile
